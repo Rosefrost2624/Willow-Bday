@@ -38,7 +38,6 @@ body {
   cursor:pointer;
 }
 
-/* Covers */
 .cover {
   position:absolute;
   width:100%;
@@ -55,17 +54,14 @@ body {
   text-align:center;
 }
 
-/* Front cover above pages */
 .cover.front {
   z-index:50;
 }
 
-/* Back cover below pages */
 .cover.back {
   z-index:0;
 }
 
-/* Pages container */
 .pages {
   position:absolute;
   width:100%;
@@ -76,7 +72,6 @@ body {
   z-index:10;
 }
 
-/* Page sheet */
 .page {
   position:absolute;
   width:100%;
@@ -86,7 +81,6 @@ body {
   transition:transform var(--transition);
 }
 
-/* Page sides */
 .page-side {
   position:absolute;
   inset:0;
@@ -125,7 +119,6 @@ body {
   font-size:22px;
 }
 
-/* Flip states */
 .book.open .cover.front {
   transform:rotateY(-180deg);
 }
@@ -151,12 +144,10 @@ body {
 <div class="stage">
   <div class="book" id="book">
 
-    <!-- Back cover -->
     <div class="cover back">
       <p>(click to go to front cover)</p>
     </div>
 
-    <!-- Front cover -->
     <div class="cover front">
       <div>
         <h2>✨Happy Birthday Willow!✨</h2>
@@ -164,7 +155,6 @@ body {
       </div>
     </div>
 
-    <!-- Pages -->
     <div class="pages" id="pages"></div>
 
   </div>
@@ -172,13 +162,13 @@ body {
 
 <script>
 const pageData = [
-  {letter:"W", text:"Wonderful friend"},
-  {letter:"I", text:"Incredible person"},
-  {letter:"L", text:"Laughs that brighten everything"},
-  {letter:"L", text:"Loyal beyond words"},
-  {letter:"O", text:"One of a kind"},
-  {letter:"W", text:"Wishing you the best birthday ever"},
-  {letter:"", text:"Happy birthday Willow! I hope you have a truly wonderful day <3"}
+  {letter:"W", text:"When I'm around you, things just feel lighter."},
+  {letter:"I", text:"I honestly don’t know anyone quite like you."},
+  {letter:"L", text:"Little moments with you somehow turn into the best memories."},
+  {letter:"L", text:"Laughing with you is one of my favorite things."},
+  {letter:"O", text:"One of the easiest people in the world to be around."},
+  {letter:"W", text:"Wishing you a birthday that’s as warm and bright as you make other people’s days."},
+  {letter:"", text:"Happy Birthday, Willow. I hope today is full of the little things that make you happiest."}
 ];
 
 const container = document.getElementById("pages");
@@ -198,11 +188,10 @@ pageData.forEach((p,i)=>{
 
   const back = document.createElement("div");
   back.className = "page-side page-back";
-  back.innerHTML = "";  // blank backs to avoid mirrored text
+  back.innerHTML = "";
 
   page.appendChild(front);
   page.appendChild(back);
-
   container.appendChild(page);
 });
 
