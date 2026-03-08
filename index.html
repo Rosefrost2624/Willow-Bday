@@ -158,8 +158,10 @@ body {
 
     <!-- Front cover -->
     <div class="cover front">
-      <h2>✨Happy Birthday Willow!✨</h2>
-      <p>Tap to open 🦆</p>
+      <div>
+        <h2>✨Happy Birthday Willow!✨</h2>
+        <p>Tap to open 🦆</p>
+      </div>
     </div>
 
     <!-- Pages -->
@@ -196,7 +198,7 @@ pageData.forEach((p,i)=>{
 
   const back = document.createElement("div");
   back.className = "page-side page-back";
-  back.innerHTML = front.innerHTML;
+  back.innerHTML = "";  // blank backs to avoid mirrored text
 
   page.appendChild(front);
   page.appendChild(back);
@@ -214,7 +216,6 @@ function turnPage(){
   if(resetting) return;
 
   if(index === -1){
-    // Open front cover
     book.classList.add("open");
     index = 0;
     return;
@@ -226,16 +227,22 @@ function turnPage(){
     return;
   }
 
-  // Reset back to front cover
   resetting = true;
+
   pages.forEach((page,i)=>{
     setTimeout(()=> page.classList.remove("flipped"), i*120);
   });
+
+  const pageResetTime = pages.length * 120;
+
   setTimeout(()=>{
     book.classList.remove("open");
+  }, pageResetTime + 300);
+
+  setTimeout(()=>{
     index = -1;
-    resetting=false;
-  }, pages.length*120 + 400);
+    resetting = false;
+  }, pageResetTime + 900);
 }
 
 book.addEventListener("click", turnPage);
