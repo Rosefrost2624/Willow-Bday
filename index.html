@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Happy Birthday Willow!</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --book-width:520px;
+  --book-height:320px;
+  --cover:#4bb6d6;
+  --paper:#fffef8;
+  --transition:0.9s cubic-bezier(.2,.9,.3,1);
+}
+
+body {
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(180deg,#f6f9ff,#eaf4ff);
+  font-family:Poppins,sans-serif;
+}
+
+.stage {
+  perspective:1800px;
+}
+
+.book {
+  width:var(--book-width);
+  height:var(--book-height);
+  position:relative;
+  transform-style:preserve-3d;
+  cursor:pointer;
+}
+
+/* Covers */
+.cover {
+  position:absolute;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  border-radius:10px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  backface-visibility:hidden;
+  background:var(--cover);
+  color:white;
+  text-align:center;
+}
+
+/* Front cover above pages */
+.cover.front {
+  z-index:50;
+}
+
+/* Back cover below pages */
+.cover.back {
+  z-index:0;
+}
+
+/* Pages container */
+.pages {
+  position:absolute;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  transform-style:preserve-3d;
+  z-index:10;
+}
+
+/* Page sheet */
+.page {
+  position:absolute;
+  width:100%;
+  height:100%;
+  transform-origin:left;
+  transform-style:preserve-3d;
+  transition:transform var(--transition);
+}
+
+/* Page sides */
+.page-side {
+  position:absolute;
+  inset:0;
+  padding:28px;
+  border-radius:6px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  backface-visibility:hidden;
+  background:var(--paper);
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+.page-back {
+  transform:rotateY(180deg);
+}
+
+.big-letter {
+  font-size:56px;
+  font-weight:800;
+  margin-top:20px;
+}
+
+.page-text {
+  margin-top:30px;
+  text-align:center;
+  font-size:18px;
+  line-height:1.5;
+  flex-grow:1;
+}
+
+.duck {
+  align-self:flex-end;
+  margin-top:auto;
+  font-size:22px;
+}
+
+/* Flip states */
+.book.open .cover.front {
+  transform:rotateY(-180deg);
+}
+
+.page.flipped {
+  transform:rotateY(-180deg);
+}
+
+@media(max-width:600px) {
+  .book {
+    width:340px;
+    height:220px;
+  }
+  .big-letter {
+    font-size:40px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="stage">
+  <div class="book" id="book">
+
+    <!-- Back cover -->
+    <div class="cover back">
+      <p>(click to go to front cover)</p>
+    </div>
+
+    <!-- Front cover -->
+    <div class="cover front">
+      <h2>✨Happy Birthday Willow!✨</h2>
+      <p>Tap to open 🦆</p>
+    </div>
+
+    <!-- Pages -->
+    <div class="pages" id="pages"></div>
+
+  </div>
+</div>
+
+<script>
+const pageData = [
+  {letter:"W", text:"Wonderful friend"},
+  {letter:"I", text:"Incredible person"},
+  {letter:"L", text:"Laughs that brighten everything"},
+  {letter:"L", text:"Loyal beyond words"},
+  {letter:"O", text:"One of a kind"},
+  {letter:"W", text:"Wishing you the best birthday ever"},
+  {letter:"", text:"Happy birthday Willow! I hope you have a truly wonderful day <3"}
+];
+
+const container = document.getElementById("pages");
+
+pageData.forEach((p,i)=>{
+  const page = document.createElement("div");
+  page.className = "page";
+  page.style.zIndex = pageData.length - i;
+
+  const front = document.createElement("div");
+  front.className = "page-side";
+  front.innerHTML = `
+    ${p.letter ? `<div class="big-letter">${p.letter}</div>` : ''}
+    <div class="page-text">${p.text}</div>
+    <div class="duck">🦆</div>
+  `;
+
+  const back = document.createElement("div");
+  back.className = "page-side page-back";
+  back.innerHTML = front.innerHTML;
+
+  page.appendChild(front);
+  page.appendChild(back);
+
+  container.appendChild(page);
+});
+
+const book = document.getElementById("book");
+const pages = document.querySelectorAll(".page");
+
+let index = -1;
+let resetting = false;
+
+function turnPage(){
+  if(resetting) return;
+
+  if(index === -1){
+    // Open front cover
+    book.classList.add("open");
+    index = 0;
+    return;
+  }
+
+  if(index < pages.length){
+    pages[index].classList.add("flipped");
+    index++;
+    return;
+  }
+
+  // Reset back to front cover
+  resetting = true;
+  pages.forEach((page,i)=>{
+    setTimeout(()=> page.classList.remove("flipped"), i*120);
+  });
+  setTimeout(()=>{
+    book.classList.remove("open");
+    index = -1;
+    resetting=false;
+  }, pages.length*120 + 400);
+}
+
+book.addEventListener("click", turnPage);
+book.addEventListener("touchstart", e=>{
+  e.preventDefault();
+  turnPage();
+});
+</script>
+
+</body>
+</html>
